@@ -1,0 +1,78 @@
+---
+- name: "create EA4 default profile config"
+  copy:
+    src: ea4_profile.json
+    dest: /tmp/ea4_profile.json
+    group: root
+    mode: 0644
+    owner: root
+    
+
+- name: "Install EA4"
+  shell: " /scripts/migrate_ea3_to_ea4 --run --yes --force --skip-blockers --install_profile /tmp/ea4_profile.json"
+  register: ea4_enabled
+
+- name: "Optimize EA4"
+  copy:
+    src: apache_local
+    dest: /var/cpanel/conf/apache/local
+    group: root
+    mode: 0644
+    owner: root
+
+
+- name: "copy php.ini to multiPHP ver"
+  copy:
+    src: php.ini
+    dest: "/opt/cpanel/ea-php{{ item }}/root/etc/php.ini"
+    group: root
+    mode: 420
+    owner: root
+  with_items:
+    - 54
+    - 55
+    - 56
+    - 70
+    - 71
+
+- name: "Resolv.conf"
+  copy:
+    src: resolv.conf
+    dest: /etc/resolv.conf
+    group: root
+    mode: 0644
+    owner: root
+
+
+- name: "Named opti"
+  copy:
+    src: named.conf
+    dest: "/etc/named.conf"
+    group: named
+    mode: 0644
+    owner: named
+
+
+- name: "rebuild httpd config"
+  command: /scripts/rebuildhttpdconf
+
+- name: "rebuild dns config"
+  command: /scripts/rebuilddnsconfig
+
+
+- name: "FTP opti"
+  copy:
+    src: ftp.conf
+    dest: /var/cpanel/conf/pureftpd/main
+    group: root
+    mode: 0644
+    owner: root
+
+
+- name: "MYSQL Cnf"
+  copy:
+    src: my.cnf
+    dest: /etc/my.cnf
+    group: root
+    mode: 0644
+    owner: root

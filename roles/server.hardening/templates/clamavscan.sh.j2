@@ -1,0 +1,8 @@
+ #!/bin/bash
+rm -f /root/infections;
+touch /root/infections;
+for i in `awk '!/nobody/{print $2 | "sort | uniq" }' /etc/userdomains | sort | uniq`;
+do echo -e "Scan Report for Account $i \n" >>/root/infections ;echo -e "Scan Started at `date` \n" >> /root/infections ;
+nice -n5 /usr/local/cpanel/3rdparty/bin/clamscan -i -r /home/$i/public_html 2>>/dev/null >> /root/infections;
+echo -e "\n Scan Ended at `date` \n--------------------------------------  \n \n" >> /root/infections; done;
+cat /root/infections | mail -s "ClamAV Scan Result" -r "clamav@{{ fqdn }}"  {{ email }}

@@ -1,0 +1,42 @@
+---
+- name: "Set hostname"
+  command: /usr/sbin/whmapi1 sethostname hostname={{ fqdn }}
+
+- name: "Set ns1"
+  command: /usr/sbin/whmapi1 adddns domain={{ ns1 }} ip={{ansible_default_ipv4.address}}
+
+- name: "Set ns2"
+  command: /usr/sbin/whmapi1 adddns domain={{ ns2 }} ip={{ansible_default_ipv4.address}}
+
+- name: "set hostname dns entry"
+  command: /usr/sbin/whmapi1 adddns domain={{ fqdn }} ip={{ansible_default_ipv4.address}}
+
+- name: "editing wwacct.conf"
+  template:
+    dest: /etc/wwwacct.conf
+    group: root
+    mode: 0644
+    owner: root
+    src: wwwacct.conf
+
+- name: "Implement loadmon"
+  template:
+    dest: /root/loadmon.sh
+    group: root
+    mode: 0755
+    owner: root
+    src: loadmon.sh
+
+- name: "add sysmon monitoring"
+  cron:
+    name="add sysmon monitoring"
+    minute="*/3"
+    job="sh /root/loadmon.sh 2>&1"
+
+- name: "delete sysmon logs every 15 days"
+  cron:
+    name="delete sysmon logs"
+    minute="10"
+    hour="0"
+    weekday="0"
+    job="find /var/log/sysmon/ -mtime +15 -delete > 2>&1"

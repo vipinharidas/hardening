@@ -1,0 +1,36 @@
+---
+- name: Make sure unwanted services are disabled
+  service: enabled=no state=stopped name="{{ item }}"
+  with_items:
+    - acpid
+    - anacron
+    - apmd
+    - atd
+    - auditd
+    - autofs
+    - avahi-daemon
+    - collectd
+    - cpuspeed
+    - cups
+    - cups-config-daemon
+    - firstboot
+    - gpm
+    - haldaemon
+    - hidd
+    - irqbalance
+    - isdn
+    - mcstrans
+    - netfs
+    - nfslock
+    - openibd
+    - pcmcia
+    - pcscd
+    - portmap
+    - rawdevices
+    - readahead_early
+    - rpcgssd
+    - rpcidmapd
+    - sendmail
+    - smartd
+    - xfs
+    - yum-updatesd

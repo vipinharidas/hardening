@@ -1,0 +1,91 @@
+---
+- name: Root login notification
+  template:
+     dest='/root/.bashrc'
+     src='bashrc.j2'
+     owner=root
+     group=root
+     mode=0644
+
+- name: Enable shellfork bomb protect
+  shell: "perl -I/usr/local/cpanel -MCpanel::LoginProfile -le 'print [Cpanel::LoginProfile::install_profile('limits')]->[1];'"
+
+- name: harden tmp and disable compilers
+  shell: "/scripts/securetmp --auto --install; /scripts/compilers off"
+
+- name: update system
+  yum:
+    name: '*'
+    state: latest
+
+
+#- name: update cPanel
+#  shell: "/scripts/upcp --force"
+# disabling it, as it takes more than 20 mins. Should be taken care of by daily cron.
+
+# csf
+
+# Download the CSF file
+- name: create temp dir
+  file: >
+    path=/usr/local/src/csf/ state=directory mode=0700
+
+- name: download csf files
+  unarchive: >
+    src=https://download.configserver.com/csf.tgz dest=/usr/local/src/csf/
+    remote_src=yes
+
+- name: install package perl-libwww-perl
+  yum: name=perl-libwww-perl state=present
+
+- name: install package ipset
+  yum: name=ipset state=present
+
+- name: install package perl-GDGraph
+  yum: name=perl-GDGraph state=present
+
+# Install CSF
+- name: install csf
+  command: sh install.cpanel.sh
+  args:
+    chdir: /usr/local/src/csf/csf/
+
+# Cleanup TEMP dir we created
+- name: cleanup csf files
+  file: >
+    path=/usr/local/src/csf/ state=absent
+
+# CSF config
+- name: "create csf config"
+  copy:
+    src: csf.conf
+    dest: /etc/csf/csf.conf
+    group: root
+    mode: 0644
+    owner: root
+    backup: yes
+
+# CSF allow office IPs
+- name: "allow office IPs config"
+  copy:
+    src: csf.allow
+    dest: /etc/csf/csf.allow
+    group: root
+    mode: 0644
+    owner: root
+    backup: yes
+
+# Backup config
+- name: "create backup config"
+  copy:
+    src: backup.conf
+    dest: /var/cpanel/backups/config
+    group: root
+    mode: 0644
+    owner: root
+    backup: yes
+
+# - file: path=/usr/local/src/ansible state=absent
+#- name: server-restart
+#  command: shutdown -r +3
+#  notify: cleanup

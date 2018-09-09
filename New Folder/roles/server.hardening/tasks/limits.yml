@@ -1,0 +1,9 @@
+---
+- name: create limits.d-directory if it does not exist
+  file: path='/etc/security/limits.d' owner=root group=root mode=0755 state=directory
+
+- name: create sane limits.conf
+  template: src='limits.conf.j2' dest='/etc/security/limits.d/10.hardcore.conf' owner=root group=root mode=0440
+
+- name: create sane nproc.conf
+  template: src='nproc.conf.j2' dest='/etc/security/limits.d/90-nproc.conf' owner=root group=root mode=0440

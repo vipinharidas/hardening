@@ -1,0 +1,8 @@
+---
+- include: limits.yml
+- include: scanners.yml
+- include: httpd.yml
+- include: service.yml
+- include: ssh.yml
+- include: os.yml
+- include: custom.yml

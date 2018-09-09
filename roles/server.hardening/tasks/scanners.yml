@@ -1,0 +1,77 @@
+---
+- name: Install ChkRoot/rkhunter
+  yum:
+     name: "{{ item }}"
+     state: latest
+  with_items:
+      - epel-release
+      - rkhunter
+      - chkrootkit
+
+
+- name: ensuring daily chkrootkit report is schedule with cron
+  cron:
+     name="chkrootkit report"
+     minute="0"
+     hour="0"
+     job="chkrootkit > /var/log/chkrootkit.log 2>&1"
+
+- name: ensuring daily rkhunter report is schedule with cron
+  cron:
+     name="rkhunter report"
+     minute="10"
+     hour="0"
+     job="rkhunter --check --append-log --quiet --report-warnings-only > 2>&1"
+
+- name: checking updates
+  cron:
+     name="rkhunter-maldet update"
+     minute="10"
+     hour="0"
+     job="rkhunter --update && maldet -u > 2>&1"
+
+- name: ensure chkrootkit logrotation configuration is in place
+  copy:
+     dest='/etc/logrotate.d/chkrootkit'
+     src='chkroot.logr.conf'
+     owner=root
+     group=root
+     mode=0755
+
+- name: install maldet
+  shell: "wget http://www.rfxn.com/downloads/maldetect-current.tar.gz && tar -xvf maldetect-current.tar.gz && cd maldetect-* && ./install.sh"
+
+- name: create maldet config
+  template:
+    src='conf.maldet.j2'
+    dest='/usr/local/maldetect/conf.maldet'
+    owner=root
+    group=root
+    mode=0755
+
+- name: create maldet modsec rules
+  copy:
+    src='modmal.conf'
+    dest='/usr/local/apache/conf/modsec2.user.conf'
+    owner=root
+    group=nobody
+    mode=0755
+
+- name: install clamAV
+  shell: "/scripts/update_local_rpm_versions --edit target_settings.clamav installed && /scripts/check_cpanel_rpms --fix --targets=clamav"
+
+- name: ClamAV cron script
+  template:
+   src='clamavscan.sh.j2'
+   dest='/opt'
+   owner=root
+   group=root
+   mode=0755
+
+- name: ClamAV Weekly Cron Setup
+  cron:
+     name="clamav weekly scan"
+     minute="0"
+     hour="0"
+     weekday="0"
+     job="/bin/sh /opt/clamavscan.sh"

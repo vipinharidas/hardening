@@ -1,0 +1,69 @@
+--- 
+"main": 
+  "directory": 
+    "options": 
+      "directive": 'options'
+      "item": 
+        "options": 'ExecCGI FollowSymLinks IncludesNOEXEC Indexes SymLinksIfOwnerMatch'
+  "fileetag": 
+    "item": 
+      "fileetag": 'None'
+  "keepalive": 
+    "item": 
+      "keepalive": 'On'
+  "keepalivetimeout": 
+    "item": 
+      "keepalivetimeout": 5
+  "loglevel": 
+    "item": 
+      "loglevel": 'warn'
+  "maxclients": 
+    "item": 
+      "maxclients": 300
+  "maxkeepaliverequests": 
+    "item": 
+      "maxkeepaliverequests": 100
+  "maxrequestsperchild": 
+    "item": 
+      "maxrequestsperchild": 10000
+  "maxspareservers": 
+    "item": 
+      "maxspareservers": 30
+  "minspareservers": 
+    "item": 
+      "minspareservers": 15
+  "root_options": 
+    "item": 
+      "root_options": 
+        "ExecCGI": 1
+        "FollowSymLinks": 1
+        "Includes": 0
+        "IncludesNOEXEC": 1
+        "Indexes": 1
+        "MultiViews": 0
+        "SymLinksIfOwnerMatch": 1
+  "serverlimit": 
+    "item": 
+      "serverlimit": 300
+  "serversignature": 
+    "item": 
+      "serversignature": 'Off'
+  "servertokens": 
+    "item": 
+      "servertokens": 'ProductOnly'
+  "sslciphersuite": 
+    "item": 
+      "sslciphersuite": 'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA:!DSS'
+  "sslprotocol": 
+    "item": 
+      "sslprotocol": 'All -SSLv2 -SSLv3'
+  "startservers": 
+    "item": 
+      "startservers": 75
+  "timeout": 
+    "item": 
+      "timeout": 300
+  "traceenable": 
+    "item": 
+      "traceenable": 'Off'
+

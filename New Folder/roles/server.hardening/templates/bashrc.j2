@@ -1,0 +1,8 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+echo 'ALERT - Root Shell Access on' `hostname` 'at:' `date` 'by' `who` | mail -s "Alert: Root Access from `who | cut -d'(' -f2 | cut -d')' -f1`" {{ email }}
