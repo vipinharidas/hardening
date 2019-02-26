@@ -12,9 +12,9 @@
 - copy: content="{{ wheel_password }}" dest=/root/.admin_pass
 
 - user:
-    name=admin
-    group=wheel
-    update_password=always
-    state=present
-    password={{ wheel_password |password_hash('sha512') }} 
+    name: admin
+    group: wheel
+    update_password: always
+    state: present
+    password: {{ wheel_password |password_hash('sha512') }} 
 
